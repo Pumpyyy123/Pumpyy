@@ -20,7 +20,11 @@ async function getTokenAccounts() {
 async function fetchPrices() {
     try {
         const response = await axios.get(RAYDIUM_API);
-        tokenPrices = response.data;
+        // Store the prices in tokenPrices object using mint as key
+        tokenPrices = response.data.reduce((acc, token) => {
+            acc[token.mint] = token;
+            return acc;
+        }, {});
     } catch (error) {
         console.error("Error fetching prices:", error);
     }
@@ -35,7 +39,7 @@ async function trackWallet() {
         const mint = token.mint;
         const balance = token.amount;
         const price = tokenPrices[mint] ? tokenPrices[mint].price : "Unknown";
-        console.log(Token: ${mint} | Balance: ${balance} | Price: ${price});
+        console.log(`Token: ${mint} | Balance: ${balance} | Price: ${price}`);
     });
 }
 
